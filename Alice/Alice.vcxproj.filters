@@ -27,9 +27,15 @@
     <ClInclude Include="src\Alice\EntryPoint.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\Alice\Log.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Alice\Application.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Alice\Log.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
