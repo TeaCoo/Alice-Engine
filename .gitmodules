@@ -1,0 +1,3 @@
+[submodule "Alice/extern/spdlog"]
+	path = Alice/extern/spdlog
+	url = https://github.com/gabime/spdlog.git
