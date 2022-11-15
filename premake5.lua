@@ -60,7 +60,10 @@ project "Alice"
 	language "C++"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
+	
+	pchheader "pch.h"
+	pchsource "Alice/src/pch.cpp"
+	
 	files
 	{
 		"%{prj.name}/src/**.h",
@@ -69,7 +72,8 @@ project "Alice"
 
 	includedirs
 	{
-		"%{prj.name}/extern/spdlog/include"
+		"%{prj.name}/extern/spdlog/include",
+		"%{prj.name}/src"
 	}
 	filter "system:windows"
 		cppdialect "C++17"
