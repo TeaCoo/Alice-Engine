@@ -2,6 +2,10 @@
 #include "Alice/Window.h"
 #include <GLFW/glfw3.h>
 
+#include "Alice/Event/ApplicationEvent.h"
+#include "Alice/Event/KeyEvent.h"
+#include "Alice/Event/MouseEvent.h"
+
 namespace Alice
 {
 	class WindowsWindow : public Window
