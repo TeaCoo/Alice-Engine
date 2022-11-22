@@ -10,8 +10,10 @@ workspace "Alice"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 includeDir = {}
 includeDir["GLFW"] = "Alice/extern/GLFW/include"
+includeDir["Glad"] = "Alice/extern/Glad/include"
 
 include "Alice/extern/GLFW"
+include "Alice/extern/Glad"
 
 project "Sandbox"
 	location "Sandbox"
@@ -81,13 +83,15 @@ project "Alice"
 	{
 		"%{prj.name}/extern/spdlog/include",
 		"%{prj.name}/src",
-		"%{includeDir.GLFW}"
+		"%{includeDir.GLFW}",
+		"%{includeDir.Glad}",
 	}
 
 	links
 	{
 		"GLFW",
-		"opengl32.lib"
+		"Glad",
+		"opengl32.lib",
 	}
 
 	filter "system:windows"
@@ -98,7 +102,8 @@ project "Alice"
 		defines
 		{
 			"ALICE_PLATFORM_WINDOWS",
-			"ALICE_BUILD_DLL"
+			"ALICE_BUILD_DLL",
+			"GLFW_INCLUDE_NONE",
 		}
 
 		postbuildcommands
