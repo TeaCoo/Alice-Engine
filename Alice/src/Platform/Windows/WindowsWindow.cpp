@@ -48,6 +48,7 @@ namespace Alice
 		SetVSync(true);
 
 		// set GLFW callback
+		
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) 
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
