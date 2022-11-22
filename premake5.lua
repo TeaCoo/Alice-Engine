@@ -8,6 +8,10 @@ workspace "Alice"
 	}
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+includeDir = {}
+includeDir["GLFW"] = "Alice/extern/GLFW/include"
+
+include "Alice/extern/GLFW"
 
 project "Sandbox"
 	location "Sandbox"
@@ -73,8 +77,16 @@ project "Alice"
 	includedirs
 	{
 		"%{prj.name}/extern/spdlog/include",
-		"%{prj.name}/src"
+		"%{prj.name}/src",
+		"%{includeDir.GLFW}"
 	}
+
+	links
+	{
+		"GLFW",
+		"opengl32.lib"
+	}
+
 	filter "system:windows"
 		cppdialect "C++17"
 		staticruntime "On"

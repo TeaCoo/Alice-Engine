@@ -12,6 +12,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Alice/Log.h"
+
 #ifdef ALICE_PLATFORM_WINDOWS
 	#include <windows.h>
 #endif
