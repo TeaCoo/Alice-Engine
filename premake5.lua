@@ -11,9 +11,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 includeDir = {}
 includeDir["GLFW"] = "Alice/extern/GLFW/include"
 includeDir["Glad"] = "Alice/extern/Glad/include"
+includeDir["ImGui"] = "Alice/extern/imgui"
 
 include "Alice/extern/GLFW"
 include "Alice/extern/Glad"
+include "Alice/extern/imgui"
 
 project "Sandbox"
 	location "Sandbox"
@@ -85,12 +87,14 @@ project "Alice"
 		"%{prj.name}/src",
 		"%{includeDir.GLFW}",
 		"%{includeDir.Glad}",
+		"%{includeDir.ImGui}",
 	}
 
 	links
 	{
 		"GLFW",
 		"Glad",
+		"ImGui",
 		"opengl32.lib",
 	}
 

@@ -1,5 +1,5 @@
 #include <Alice.h>
-
+#include "Alice/ImGui/ImGuiLayer.h"
 class ExampleLayer :public Alice::Layer 
 {
 public:
@@ -24,6 +24,7 @@ public:
 	Sandbox() 
 	{
 		PushLayer(new ExampleLayer());
+		PushOverlay(new Alice::ImGuiLayer());
 	}
 
 	~Sandbox() 
