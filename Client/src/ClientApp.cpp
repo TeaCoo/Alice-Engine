@@ -10,24 +10,24 @@ public:
 
 	void OnUpdate() override
 	{
-		ALICE_INFO("ExampleLayer::Update");
+		//ALICE_INFO("ExampleLayer::Update");
 	}
 
 	void OnEvent(Alice::Event& event) override
 	{
-		ALICE_TRACE("{0}", event);
+		//ALICE_TRACE("{0}", event);
 	}
 };
 
-class Sandbox : public Alice::Application {
+class Client : public Alice::Application {
 public: 
-	Sandbox() 
+	Client() 
 	{
 		PushLayer(new ExampleLayer());
 		PushOverlay(new Alice::ImGuiLayer());
 	}
 
-	~Sandbox() 
+	~Client() 
 	{
 
 	}
@@ -36,5 +36,5 @@ public:
 };
 
 Alice::Application* Alice::CreateApplication() {
-	return new Sandbox();
+	return new Client();
 }

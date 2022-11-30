@@ -6,7 +6,8 @@ workspace "Alice"
 		"Release",
 		"Dist"
 	}
-outdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+	startproject "Client"
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 includeDir = {}
 includeDir["GLFW"] = "Alice/extern/GLFW/include"
@@ -17,10 +18,10 @@ include "Alice/extern/GLFW"
 include "Alice/extern/Glad"
 include "Alice/extern/imgui"
 
-startproject "Sandbox"
 
-project "Sandbox"
-	location "Sandbox"
+
+project "Client"
+	location "Client"
 	kind "ConsoleApp"
 	language "C++"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -50,6 +51,11 @@ project "Sandbox"
 		defines
 		{
 			"ALICE_PLATFORM_WINDOWS"
+		}
+		
+		postbuildcommands
+		{
+			("{COPY} ../bin/" .. outputdir .. "/Alice/Alice.dll ../bin/" .. outputdir .. "/Client")
 		}
 
 	filter "configurations:Debug"
@@ -112,10 +118,6 @@ project "Alice"
 			"GLFW_INCLUDE_NONE",
 		}
 
-		postbuildcommands
-		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
-		}
 	filter "configurations:Debug"
 		defines "ALICE_DEBUG"
 		buildoptions "/MDd"
