@@ -6,7 +6,7 @@ workspace "Alice"
 		"Release",
 		"Dist"
 	}
-
+outdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 includeDir = {}
 includeDir["GLFW"] = "Alice/extern/GLFW/include"
