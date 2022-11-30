@@ -75,6 +75,13 @@ namespace Alice
 				data.EventCallback(event);
 			});
 
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int Keycode)
+			{
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+				KeyTypedEvent event(Keycode);
+				data.EventCallback(event);
+			});
+
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
