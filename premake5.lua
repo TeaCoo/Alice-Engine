@@ -17,6 +17,8 @@ include "Alice/extern/GLFW"
 include "Alice/extern/Glad"
 include "Alice/extern/imgui"
 
+startproject "Sandbox"
+
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
