@@ -24,7 +24,6 @@ public:
 	Client() 
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new Alice::ImGuiLayer());
 	}
 
 	~Client() 

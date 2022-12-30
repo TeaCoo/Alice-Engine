@@ -12,19 +12,11 @@ namespace Alice
 	public:
 		ImGuiLayer();
 		~ImGuiLayer();
-		void OnAttach();
-		void OnDetach();
-		void OnUpdate();
-		void OnEvent(Event& event);
-		bool OnKeyPressedEvent(KeyPressedEvent& e);
-		bool OnKeyReleaseEvent(KeyReleasedEvent& e);
-		bool OnMouseScrolledEvent(MouseScrolledEvent& e);
-		bool OnMousePressedEvent(MouseButtonPressedEvent& e);
-		bool OnMouseMovedEvent(MouseMoveEvent& e);
-		bool OnMouseReleasedEvent(MouseButtonReleasedEvent& e);
-		bool OnWindowResizeEvent(WindowResizeEvent& e);
-		bool OnKeyTypeEvent(KeyTypedEvent& e);
-		void MapGLFWKey();
+		virtual void OnAttach() override;
+		virtual void OnDetach() override;
+		virtual void OnImGuiRender() override;
+		void Begin();
+		void End();
 	private:
 		float m_Time = 0.0f;
 	};

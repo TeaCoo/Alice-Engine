@@ -12,6 +12,7 @@ int main(int argc, char** argv) {
 	ALICE_INFO("Hello!");
 
 	auto app = Alice::CreateApplication();
+
 	app->Run();
 	delete app;
 }

@@ -4,6 +4,7 @@
 #include "Alice/Event/Event.h"
 #include "Alice/Event/ApplicationEvent.h"
 #include "Alice/Layer/LayerStack.h"
+#include "Alice/ImGui/ImGuiLayer.h"
 
 namespace Alice {
 	class ALICE_API Application
@@ -25,6 +26,7 @@ namespace Alice {
 		bool OnWindowCloased(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
