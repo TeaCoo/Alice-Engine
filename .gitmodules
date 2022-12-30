@@ -1,0 +1,10 @@
+[submodule "Alice/extern/imgui"]
+	path = Alice/extern/imgui
+	url = https://github.com/TeaCoo/imgui.git
+	branch = docking
+[submodule "Alice/extern/glfw"]
+	path = Alice/extern/glfw
+	url = https://github.com/TeaCoo/glfw.git
+[submodule "Alice/extern/spdlog"]
+	path = Alice/extern/spdlog
+	url = https://github.com/gabime/spdlog.git
