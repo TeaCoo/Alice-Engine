@@ -4,11 +4,11 @@
 </p>
 <br/>
 
-##Environment
+## Environment
 * Windows 10 x64
 * Visual Studio 2019
 * OpenGL 3.0
 
 ## How to Compile
-###Visual Studio
+### Visual Studio
 Run "setup.bat" in the root path and it will generate an "Alice.sln" file. You can open and compile it with Visual Studio.
