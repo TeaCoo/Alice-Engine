@@ -53,6 +53,8 @@ namespace Alice
 		// Setup Platform/Renderer backends
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
+
+		this->main_gui_ptr = new mainGUI();
 	}
 
 	void ImGuiLayer::OnDetach()
@@ -65,7 +67,8 @@ namespace Alice
 	void ImGuiLayer::OnImGuiRender()
 	{
 		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
+		//ImGui::ShowDemoWindow(&show);
+		this->main_gui_ptr->showMainGUI(&show);
 	}
 
 	void ImGuiLayer::Begin()
