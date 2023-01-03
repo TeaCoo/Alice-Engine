@@ -5,16 +5,9 @@
 #include "Alice/Event/KeyEvent.h"
 #include "Alice/Event/MouseEvent.h"
 
-#include <glad/glad.h>
-
 namespace Alice
 {
-	static bool s_GLFWInitialized = false;
-	
-	static void GLFWErrorCallback(int error, const char* description)
-	{
-		ALICE_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
-	}
+
 
 	Window* Window::Create(const WindowProps& props)
 	{
@@ -23,6 +16,8 @@ namespace Alice
 
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
+		// Use OpenGL3 as default
+		this->rendererType = RendererType::OpenGL3;
 		Init(props);
 	}
 
@@ -40,24 +35,42 @@ namespace Alice
 
 		ALICE_CORE_INFO("Creating window {0} ({1},{2})", props.Title, props.Width, props.Height);
 
-		if (!s_GLFWInitialized)
+		// Use OpenGl 3 API for rendering
+		if (this->rendererType == RendererType::OpenGL3) 
 		{
-			int success = glfwInit();
-			ALICE_CORE_ASSERT(success, "Could not intialize GLFW!");
-			glfwSetErrorCallback(GLFWErrorCallback);
-			s_GLFWInitialized = true;
+			renderer = (Renderer*) new OpenGL3Renderer((int)props.Width, (int)props.Height, m_Data.Title.c_str());
 		}
+		// Use Vulkan API for rendering
+		else if (this->rendererType == RendererType::Vulkan)
+		{
+			// =========TODO=======
+		}
+		renderer->Init();
+		
+		m_Window = renderer->getWindow();
 
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_Window);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		ALICE_CORE_ASSERT(status, "Failed to initialize Glad!");
 		glfwSetWindowUserPointer(m_Window, &m_Data);
+		
 		SetVSync(true);
 
+		InitCallBack();
+	}
+
+	void WindowsWindow::Shutdown()
+	{
+		renderer->Shudown();
+	}
+
+	void WindowsWindow::OnUpdate()
+	{
+		glfwPollEvents();
+		glfwSwapBuffers(m_Window);
+	}
+
+	inline void WindowsWindow::InitCallBack()
+	{
 		// set GLFW callback
-		
-		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) 
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 				data.Width = width;
@@ -65,10 +78,10 @@ namespace Alice
 
 				WindowResizeEvent event(width, height);
 				data.EventCallback(event);
-				
+
 			});
 
-		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) 
+		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 				WindowCloseEvent event;
@@ -87,44 +100,44 @@ namespace Alice
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 				switch (action)
 				{
-					case GLFW_PRESS:
-					{
-						KeyPressedEvent event(key, 0);
-						data.EventCallback(event);
-						break;
-					}
-					case GLFW_RELEASE:
-					{
-						KeyReleasedEvent event(key);
-						data.EventCallback(event);
-						break;
-					}
-					case GLFW_REPEAT:
-					{
-						KeyPressedEvent event(key, 1);
-						data.EventCallback(event);
-						break;
-					}
+				case GLFW_PRESS:
+				{
+					KeyPressedEvent event(key, 0);
+					data.EventCallback(event);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					KeyReleasedEvent event(key);
+					data.EventCallback(event);
+					break;
+				}
+				case GLFW_REPEAT:
+				{
+					KeyPressedEvent event(key, 1);
+					data.EventCallback(event);
+					break;
+				}
 				}
 			});
 
-		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) 
+		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 				switch (action)
 				{
-					case GLFW_PRESS:
-					{
-						MouseButtonPressedEvent event(button);
-						data.EventCallback(event);
-						break;
-					}
-					case GLFW_RELEASE:
-					{
-						MouseButtonReleasedEvent event(button);
-						data.EventCallback(event);
-						break;
-					}
+				case GLFW_PRESS:
+				{
+					MouseButtonPressedEvent event(button);
+					data.EventCallback(event);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					MouseButtonReleasedEvent event(button);
+					data.EventCallback(event);
+					break;
+				}
 				}
 			});
 
@@ -136,27 +149,9 @@ namespace Alice
 			});
 	}
 
-	void WindowsWindow::Shutdown()
-	{
-		glfwDestroyWindow(m_Window);
-	}
-
-	void WindowsWindow::OnUpdate()
-	{
-		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
-	}
-
 	void WindowsWindow::SetVSync(bool enabled)
 	{
-		if (enabled)
-		{
-			glfwSwapInterval(1);
-		}
-		else 
-		{
-			glfwSwapInterval(0);
-		}
+		this->renderer->SetSync(enabled);
 		m_Data.VSync = enabled;
 	}
 
