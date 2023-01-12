@@ -1,6 +1,6 @@
 # Alice Engine
 <p align="center">
-<img src="asset/icon/logo/Logo_Alice_head_opaque_line.png" width="500" height="500" alt="Logo"/>
+<img src="asset/icon/logo/Logo_Alice_head_opaque_line.png" width="340" height="500" alt="Logo"/>
 </p>
 <br/>
 
