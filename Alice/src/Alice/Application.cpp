@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Application.h"
-
+#include "FileIO/ObjFileReader.h"
 #include <glad/glad.h>
 
 namespace Alice {
@@ -20,28 +20,20 @@ namespace Alice {
 			PushOverlay(m_ImGuiLayer);
 		}
 		
-
-		glGenVertexArrays(1, &m_VertexArray);
-		glBindVertexArray(m_VertexArray);
-		glGenBuffers(1, &m_VertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
-
-		float vertices[3 * 3] = {
-			-0.5, -0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f,
-			0.0f, 0.5f, 0.0f
+		unsigned int id;
+		glGenBuffers(1, &id);
+		glBindBuffer(GL_ARRAY_BUFFER, id);
+		const float position[6] = {
+			-0.5, -0.5,
+			 0.0,  0.5,
+			 0.5, -0.5
 		};
+		glBufferData(GL_ARRAY_BUFFER, 6*sizeof(float), position, GL_STATIC_DRAW);
 
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+		glVertexAttribPointer(0, 2, GL_FLOAT, false, 2*sizeof(float), 0);
 
-		glGenBuffers(1, &m_IndexBuffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
-		unsigned int indices[3] = { 0,1,2 };
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-
+		ObjFileReader obj("../asset/model/cube.obj");
 	}
 
 	Application::~Application()
@@ -83,11 +75,11 @@ namespace Alice {
 	{
 		while (m_Running)
 		{
-			glClearColor(0, 0, 0, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
+			
+			glDrawArrays(GL_TRIANGLES,0,3);
 
-			glBindVertexArray(m_VertexArray);
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+			
 
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();

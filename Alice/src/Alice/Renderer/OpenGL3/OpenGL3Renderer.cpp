@@ -26,6 +26,8 @@ namespace Alice
 
 		m_Window = glfwCreateWindow(Width, Height, Title, nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
+
+		
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		ALICE_CORE_ASSERT(status, "Failed to initialize Glad!");
 	}
@@ -42,6 +44,7 @@ namespace Alice
 		}
 		SetIsSync(enabled);
 	}
+
 	void OpenGL3Renderer::Shudown()
 	{
 		glfwDestroyWindow(m_Window);

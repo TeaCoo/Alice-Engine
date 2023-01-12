@@ -18,10 +18,10 @@ namespace Alice
 	private:
 		bool show_app_main_menu_bar = true;
 		bool show_app_dockspace = true;
-		bool show_app_scene = false;
+		bool show_app_scene = true;
 		bool show_app_hierachy = true;
 		bool show_app_project = true;
-		bool show_app_game = false;
+		bool show_app_game = true;
 		bool show_app_inspector = true;
 	};
 }
