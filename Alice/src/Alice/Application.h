@@ -37,6 +37,12 @@ namespace Alice {
 	private:
 		static Application* s_Instance;
 		bool showGUI = false;
+
+	private: // test !!!!! need to remove
+		unsigned int index_count;
+		unsigned int id;
+		unsigned int index;
+
 	};
 	// to be defined in client
 	Application* CreateApplication();

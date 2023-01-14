@@ -2,7 +2,9 @@
 #include "Application.h"
 #include "FileIO/ObjFileReader.h"
 #include <glad/glad.h>
-
+#include "Alice/Buffer/MeshBuffer.h"
+#include "Alice/FileIO/ShaderProcessor.h"
+#include "Texture/Texture.h"
 namespace Alice {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
@@ -20,24 +22,45 @@ namespace Alice {
 			PushOverlay(m_ImGuiLayer);
 		}
 		
-		unsigned int id;
+		ObjFileReader obj("../asset/model/test.obj");
+		MeshBuffer meshBuffer(obj.meshes/*, BatchType::TEXTURE*/);
+
 		glGenBuffers(1, &id);
 		glBindBuffer(GL_ARRAY_BUFFER, id);
-		const float position[6] = {
-			-0.5, -0.5,
-			 0.0,  0.5,
-			 0.5, -0.5
-		};
-		glBufferData(GL_ARRAY_BUFFER, 6*sizeof(float), position, GL_STATIC_DRAW);
-
+		
+		glBufferData(GL_ARRAY_BUFFER,
+			meshBuffer.length_per_vertex * meshBuffer.vertexCount * sizeof(float),
+			meshBuffer.vertex_buffer->positions, 
+			GL_STATIC_DRAW);
+		
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 2, GL_FLOAT, false, 2*sizeof(float), 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, meshBuffer.length_per_vertex * sizeof(float), 0);
 
-		ObjFileReader obj("../asset/model/cube.obj");
+		glGenBuffers(1, &index);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index);
+		
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+			meshBuffer.faceEdgeCount * meshBuffer.faceCount * sizeof(unsigned int),
+			meshBuffer.index_buffer->index,
+			GL_STATIC_DRAW);
+		
+		index_count = meshBuffer.faceEdgeCount * meshBuffer.faceCount;
+
+		ShaderProcessor shaderReader("../asset/shader/default.vert","../asset/shader/default.frag");
+		unsigned int shader = CreateShader(shaderReader.vert, shaderReader.frag);
+		glUseProgram(shader);
+		/*
+		Texture texture("../asset/icon/logo/Logo_Alice_head_opaque.png");
+		texture.Bind();
+
+		int location = glGetUniformLocation(shader, "u_Texture");
+		glUniform1i(location, 0);*/
 	}
 
 	Application::~Application()
 	{
+		glDeleteBuffers(1, &id);
+		glDeleteBuffers(1, &index);
 	}
 
 	void Application::PushLayer(Layer* layer)
@@ -75,11 +98,11 @@ namespace Alice {
 	{
 		while (m_Running)
 		{
+			glClearColor(0.1, 0.1, 0.1, 1.0);
 			glClear(GL_COLOR_BUFFER_BIT);
 			
-			glDrawArrays(GL_TRIANGLES,0,3);
+			glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, nullptr);
 
-			
 
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();

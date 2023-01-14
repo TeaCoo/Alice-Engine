@@ -77,6 +77,10 @@ namespace Alice
 							CopyMeshFace(words);
 						}
 					}
+					if (words[0] == "s")
+					{
+
+					}
 				}
 			}
 			if (!this->meshes->FinalCheck()) 
