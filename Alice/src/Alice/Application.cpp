@@ -22,7 +22,7 @@ namespace Alice {
 			PushOverlay(m_ImGuiLayer);
 		}
 		
-		ObjFileReader obj("../asset/model/test.obj");
+		ObjFileReader obj("../asset/model/sphere.obj");
 		MeshBuffer meshBuffer(obj.meshes/*, BatchType::TEXTURE*/);
 
 		glGenBuffers(1, &id);
@@ -55,6 +55,11 @@ namespace Alice {
 
 		int location = glGetUniformLocation(shader, "u_Texture");
 		glUniform1i(location, 0);*/
+
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_MULTISAMPLE);
+		
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 
 	Application::~Application()
@@ -96,11 +101,12 @@ namespace Alice {
 
 	void Application::Run() 
 	{
+		
 		while (m_Running)
 		{
 			glClearColor(0.1, 0.1, 0.1, 1.0);
-			glClear(GL_COLOR_BUFFER_BIT);
-			
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 			glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, nullptr);
 
 

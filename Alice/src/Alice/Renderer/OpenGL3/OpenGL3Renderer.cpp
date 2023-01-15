@@ -23,6 +23,8 @@ namespace Alice
 			glfwSetErrorCallback(GLFWErrorCallback);
 			s_GLFWInitialized = true;
 		}
+		// MSAA
+		glfwWindowHint(GLFW_SAMPLES, 4);
 
 		m_Window = glfwCreateWindow(Width, Height, Title, nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
