@@ -4,7 +4,6 @@
 #include "Alice/Event/KeyEvent.h"
 #include "Alice/Event/MouseEvent.h"
 #include "Alice/Event/ApplicationEvent.h"
-#include "Alice/GUI/mainGUI.h"
 
 namespace Alice 
 {
@@ -20,7 +19,6 @@ namespace Alice
 		void End();
 	private:
 		float m_Time = 0.0f;
-		mainGUI* main_gui_ptr;
 	};
 }
 

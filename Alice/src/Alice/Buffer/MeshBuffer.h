@@ -23,8 +23,7 @@ namespace Alice
 		VertexBuffer* vertex_buffer;
 		unsigned int length_per_vertex;
 		unsigned int vertexCount;
-		unsigned int faceEdgeCount;
-		unsigned int faceCount;
+		unsigned int indexCount;
 	private:
 		bool IsBatchTexture;
 		bool IsBatchNormal;

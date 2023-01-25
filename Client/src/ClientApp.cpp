@@ -1,5 +1,5 @@
 #include <Alice.h>
-#include "Alice/ImGui/ImGuiLayer.h"
+
 class ExampleLayer :public Alice::Layer 
 {
 public:
@@ -19,19 +19,26 @@ public:
 	}
 };
 
+//#define CLIENT_GUI
+#define MESH_DEBUG
+//#define GUI_DEBUG
 class Client : public Alice::Application {
 public: 
 	Client() 
 	{
-		PushLayer(new ExampleLayer());
+#ifdef CLIENT_GUI
+		PushOverlay(new Alice::ImGui_Engine_Editer());
+#elif defined MESH_DEBUG
+		PushOverlay(new Alice::Mash_Debug());
+#elif defined GUI_DEBUG
+		//PushLayer(new ExampleLayer());
+#endif 
 	}
 
 	~Client() 
 	{
 
 	}
-
-
 };
 
 Alice::Application* Alice::CreateApplication() {

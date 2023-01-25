@@ -4,7 +4,7 @@
 #include "Alice/Event/Event.h"
 #include "Alice/Event/ApplicationEvent.h"
 #include "Alice/Layer/LayerStack.h"
-#include "Alice/ImGui/ImGuiLayer.h"
+#include "Alice/ImGui/ImGui_Engine_Editer.h"
 
 namespace Alice {
 	class ALICE_API Application
@@ -14,7 +14,8 @@ namespace Alice {
 		virtual ~Application();
 
 		void Run();
-
+		void ImGuiBegin();
+		void ImGuiEnd();
 		void OnEvent(Event& e);
 
 		void PushLayer(Layer* layer);
@@ -26,7 +27,6 @@ namespace Alice {
 		bool OnWindowCloased(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
-		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
@@ -36,12 +36,7 @@ namespace Alice {
 
 	private:
 		static Application* s_Instance;
-		bool showGUI = false;
-
-	private: // test !!!!! need to remove
-		unsigned int index_count;
-		unsigned int id;
-		unsigned int index;
+		bool showGUI = true;
 
 	};
 	// to be defined in client

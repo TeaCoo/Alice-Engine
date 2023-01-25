@@ -27,24 +27,28 @@ namespace Alice
 	{
 		this->vertex_buffer = new VertexBuffer();
 		this->index_buffer = new IndexBuffer();
-		this->vertex_buffer->CreateBuffer(mesh->vertex_position.size());
+		this->length_per_vertex = 3 + 2 + 3; // 3 for position, 2 for texture, 3 for normal
+		this->vertex_buffer->CreateBuffer(mesh->vertices.size() * this->length_per_vertex);
+		if (mesh->mesh_type[0] == MeshType::TRIANGLES)
+			this->index_buffer->CreateBuffer(mesh->vertices.size(), 3);
+		else if (mesh->mesh_type[0] == MeshType::QUADS)
+			this->index_buffer->CreateBuffer(mesh->vertices.size(), 4);
 
-		this->length_per_vertex = 3;
-		if (this->IsBatchTexture)
-			this->length_per_vertex += 2;
-		if (this->IsBatchNormal)
-			this->length_per_vertex += 3;
-
-		this->vertexCount = mesh->vertex_position.size();
-		for (int i = 0; i < mesh->vertex_position.size(); i++)
+		this->vertexCount = mesh->vertices.size();
+		this->indexCount = mesh->vertices.size();
+		for (int i = 0; i < mesh->vertices.size(); i++)
 		{
 			int batch_index = 0;
-			this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = mesh->vertex_position[i].x;
-			this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = mesh->vertex_position[i].y;
-			this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = mesh->vertex_position[i].z;
+			this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = mesh->vertices[i].position.x;
+			this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = mesh->vertices[i].position.y;
+			this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = mesh->vertices[i].position.z;
 
-			// need to be fixed !!!!!!///////////////
 			if (this->IsBatchTexture && mesh->vertex_uv.size() != 0)
+			{
+				this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = mesh->vertices[i].UV.x;
+				this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = mesh->vertices[i].UV.y;
+			}
+			else 
 			{
 				this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = 0;
 				this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = 0;
@@ -52,12 +56,20 @@ namespace Alice
 
 			if (this->IsBatchNormal && mesh->vertex_normal.size() != 0)
 			{
+				this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = mesh->vertices[i].normal.x;
+				this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = mesh->vertices[i].normal.y;
+				this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = mesh->vertices[i].normal.z;
+			}
+			else
+			{
 				this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = 0;
 				this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = 0;
 				this->vertex_buffer->positions[this->length_per_vertex * i + batch_index++] = 0;
 			}
-			//////////////////////////////////////////
+
+			this->index_buffer->index[i] = i;
 		}
+		/*
 		for (int i = 0; i < mesh->mesh_type.size(); i++) 
 		{
 			if (mesh->mesh_type[i] == MeshType::TRIANGLES)
@@ -86,6 +98,7 @@ namespace Alice
 				this->faceCount = mesh->mesh_quads_faces.size();
 			}	
 		}
+		*/
 	}
 
 	void MeshBuffer::GetVertexTexture()

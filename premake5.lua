@@ -13,6 +13,7 @@ includeDir = {}
 includeDir["GLFW"] = "Alice/extern/GLFW/include"
 includeDir["Glad"] = "Alice/extern/Glad/include"
 includeDir["ImGui"] = "Alice/extern/imgui"
+includeDir["glm"] = "Alice/extern/glm"
 
 include "Alice/extern/GLFW"
 include "Alice/extern/Glad"
@@ -35,7 +36,8 @@ project "Client"
 	includedirs
 	{
 		"Alice/extern/spdlog/include",
-		"Alice/src"
+		"Alice/src",
+		"%{includeDir.glm}",
 	}
 
 	links
@@ -86,7 +88,9 @@ project "Alice"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/extern/glm/glm/**.hpp",
+		"%{prj.name}/extern/glm/glm/**.inl",
 	}
 
 	includedirs
@@ -96,6 +100,7 @@ project "Alice"
 		"%{includeDir.GLFW}",
 		"%{includeDir.Glad}",
 		"%{includeDir.ImGui}",
+		"%{includeDir.glm}",
 	}
 
 	links

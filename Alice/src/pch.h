@@ -14,6 +14,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include <Shlobj.h>
+#include <io.h>
+
 #include "Alice/Log.h"
 
 #ifdef ALICE_PLATFORM_WINDOWS

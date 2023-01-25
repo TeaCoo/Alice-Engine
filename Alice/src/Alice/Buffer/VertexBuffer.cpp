@@ -15,8 +15,7 @@ namespace Alice
 
 	void VertexBuffer::CreateBuffer(unsigned int size)
 	{
-		this->VertexCount = size;
-		this->positions = (float*)malloc(sizeof(float) * size * 3);
+		this->positions = (float*)malloc(sizeof(float) * size);
 	}
 
 	void VertexBuffer::DestoryBuffer()

@@ -99,7 +99,7 @@ namespace Alice
 
 	void ObjFileReader::CopyVertexPosition(std::vector<std::string>& words)
 	{
-		VertexPosition position;
+		glm::vec3 position;
 		position.x = atof(words[1].c_str());
 		position.y = atof(words[2].c_str());
 		position.z = atof(words[3].c_str());
@@ -108,7 +108,7 @@ namespace Alice
 
 	void ObjFileReader::CopyVertexNormal(std::vector<std::string>& words)
 	{
-		VertexNormal normal;
+		glm::vec3 normal;
 		normal.x = atof(words[1].c_str());
 		normal.y = atof(words[2].c_str());
 		normal.z = atof(words[3].c_str());
@@ -117,9 +117,9 @@ namespace Alice
 
 	void ObjFileReader::CopyVertexTexture(std::vector<std::string>& words)
 	{
-		VertexUV texture;
-		texture.u = atof(words[1].c_str());
-		texture.v = atof(words[2].c_str());
+		glm::vec2 texture;
+		texture.x = atof(words[1].c_str());
+		texture.y = atof(words[2].c_str());
 		this->meshes->vertex_uv.emplace_back(texture);
 	}
 
@@ -139,6 +139,13 @@ namespace Alice
 				triange_face.vertexs[i - 1] = atoi(data[0].c_str());
 				triange_face.textures[i - 1] = atoi(data[1].c_str());
 				triange_face.normals[i - 1] = atoi(data[2].c_str());
+
+				addVertix(
+					this->meshes->vertex_position[triange_face.vertexs[i - 1] - 1],
+					this->meshes->vertex_normal[triange_face.normals[i - 1] - 1],
+					glm::vec3(0),
+					this->meshes->vertex_uv[triange_face.textures[i - 1] - 1]
+				);
 			}
 			this->meshes->mesh_trangle_faces.emplace_back(triange_face);
 		}
@@ -156,9 +163,22 @@ namespace Alice
 				quads_face.vertexs[i - 1] = atoi(data[0].c_str());
 				quads_face.textures[i - 1] = atoi(data[1].c_str());
 				quads_face.normals[i - 1] = atoi(data[2].c_str());
+
+				addVertix(
+					this->meshes->vertex_position[quads_face.vertexs[i - 1] - 1],
+					this->meshes->vertex_normal[quads_face.normals[i - 1] - 1],
+					glm::vec3(0),
+					this->meshes->vertex_uv[quads_face.textures[i - 1] - 1]
+				);
 			}
 			this->meshes->mesh_quads_faces.emplace_back(quads_face);
 		}
+	}
+
+	void ObjFileReader::addVertix(glm::vec3 position, glm::vec3 normal, glm::vec3 color, glm::vec2 UV)
+	{
+		Vert vec(position, normal, color, UV);
+		this->meshes->vertices.emplace_back(vec);
 	}
 
 	void ObjFileReader::Exception(std::string exception)

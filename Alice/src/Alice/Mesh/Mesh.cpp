@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "Mesh.h"
 namespace Alice {
+	/// <summary>
+	/// Check whether the format of mesh is correct.
+	/// </summary>
+	/// <returns> If correct then return true, otherwise false. </returns>
 	bool Alice::Mesh::FinalCheck()
 	{
 		if (this->mesh_name.size() != this->mesh_type.size()

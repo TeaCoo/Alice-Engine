@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 namespace Alice
 {
-	class Texture
+	class ALICE_API Texture
 	{
 	private:
 		unsigned int m_RendererID;

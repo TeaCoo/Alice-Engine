@@ -6,3 +6,7 @@
 //---------------Entry Point---------------
 #include "Alice/EntryPoint.h"
 //-----------------------------------------
+//------------------DEBUG------------------
+#include "Alice/ImGui/ImGui_Engine_Editer.h"
+#include "Alice/Mesh/Mash_Debug.h"
+//-----------------------------------------

@@ -12,8 +12,8 @@ namespace Alice
 		unsigned int Height;
 
 		WindowProps(const std::string& title = "Alice Engine",
-			unsigned int width = 1000,
-			unsigned int height = 1000)
+			unsigned int width = 700,
+			unsigned int height = 700)
 			: Title(title), Width(width), Height(height) {}
 	};
 

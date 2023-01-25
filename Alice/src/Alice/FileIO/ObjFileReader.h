@@ -12,6 +12,7 @@ namespace Alice
 		void CopyVertexNormal(std::vector<std::string>& words);
 		void CopyVertexTexture(std::vector<std::string>& words);
 		void CopyMeshFace(std::vector<std::string>& words);
+		void addVertix(glm::vec3 position, glm::vec3 normal, glm::vec3 color, glm::vec2 UV);
 		void Exception(std::string exception);
 	public:
 		Mesh* meshes;

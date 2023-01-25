@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "Application.h"
-#include "FileIO/ObjFileReader.h"
+#include <GLFW/glfw3.h>
 #include <glad/glad.h>
-#include "Alice/Buffer/MeshBuffer.h"
-#include "Alice/FileIO/ShaderProcessor.h"
-#include "Texture/Texture.h"
+
+#define IMGUI_IMPL_API
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 namespace Alice {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
@@ -15,57 +16,10 @@ namespace Alice {
 		s_Instance = this;
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
-
-		if (showGUI) 
-		{
-			m_ImGuiLayer = new ImGuiLayer();
-			PushOverlay(m_ImGuiLayer);
-		}
-		
-		ObjFileReader obj("../asset/model/sphere.obj");
-		MeshBuffer meshBuffer(obj.meshes/*, BatchType::TEXTURE*/);
-
-		glGenBuffers(1, &id);
-		glBindBuffer(GL_ARRAY_BUFFER, id);
-		
-		glBufferData(GL_ARRAY_BUFFER,
-			meshBuffer.length_per_vertex * meshBuffer.vertexCount * sizeof(float),
-			meshBuffer.vertex_buffer->positions, 
-			GL_STATIC_DRAW);
-		
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, meshBuffer.length_per_vertex * sizeof(float), 0);
-
-		glGenBuffers(1, &index);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index);
-		
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-			meshBuffer.faceEdgeCount * meshBuffer.faceCount * sizeof(unsigned int),
-			meshBuffer.index_buffer->index,
-			GL_STATIC_DRAW);
-		
-		index_count = meshBuffer.faceEdgeCount * meshBuffer.faceCount;
-
-		ShaderProcessor shaderReader("../asset/shader/default.vert","../asset/shader/default.frag");
-		unsigned int shader = CreateShader(shaderReader.vert, shaderReader.frag);
-		glUseProgram(shader);
-		/*
-		Texture texture("../asset/icon/logo/Logo_Alice_head_opaque.png");
-		texture.Bind();
-
-		int location = glGetUniformLocation(shader, "u_Texture");
-		glUniform1i(location, 0);*/
-
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_MULTISAMPLE);
-		
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 
 	Application::~Application()
 	{
-		glDeleteBuffers(1, &id);
-		glDeleteBuffers(1, &index);
 	}
 
 	void Application::PushLayer(Layer* layer)
@@ -107,24 +61,45 @@ namespace Alice {
 			glClearColor(0.1, 0.1, 0.1, 1.0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, nullptr);
-
-
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 
 			if (showGUI) 
 			{
-				m_ImGuiLayer->Begin();
+				ImGuiBegin();
 
 				for (Layer* layer : m_LayerStack)
 					layer->OnImGuiRender();
 
-				m_ImGuiLayer->End();
+				ImGuiEnd();
 			}
 
 			m_Window->OnUpdate();
+		}
+	}
 
+	void Application::ImGuiBegin()
+	{
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+	}
+
+	void Application::ImGuiEnd()
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		Application& app = Application::Get();
+		io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
+		// Rendering
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup_current_context);
 		}
 	}
 }
